@@ -1,0 +1,255 @@
+---
+name: College Attendance Management System
+colors:
+  surface: '#f8f9ff'
+  surface-dim: '#cbdbf5'
+  surface-bright: '#f8f9ff'
+  surface-container-lowest: '#ffffff'
+  surface-container-low: '#eff4ff'
+  surface-container: '#e5eeff'
+  surface-container-high: '#dce9ff'
+  surface-container-highest: '#d3e4fe'
+  on-surface: '#0b1c30'
+  on-surface-variant: '#434655'
+  inverse-surface: '#213145'
+  inverse-on-surface: '#eaf1ff'
+  outline: '#737686'
+  outline-variant: '#c3c6d7'
+  surface-tint: '#0053db'
+  primary: '#004ac6'
+  on-primary: '#ffffff'
+  primary-container: '#2563eb'
+  on-primary-container: '#eeefff'
+  inverse-primary: '#b4c5ff'
+  secondary: '#565e74'
+  on-secondary: '#ffffff'
+  secondary-container: '#dae2fd'
+  on-secondary-container: '#5c647a'
+  tertiary: '#006329'
+  on-tertiary: '#ffffff'
+  tertiary-container: '#007f36'
+  on-tertiary-container: '#c7ffca'
+  error: '#ba1a1a'
+  on-error: '#ffffff'
+  error-container: '#ffdad6'
+  on-error-container: '#93000a'
+  primary-fixed: '#dbe1ff'
+  primary-fixed-dim: '#b4c5ff'
+  on-primary-fixed: '#00174b'
+  on-primary-fixed-variant: '#003ea8'
+  secondary-fixed: '#dae2fd'
+  secondary-fixed-dim: '#bec6e0'
+  on-secondary-fixed: '#131b2e'
+  on-secondary-fixed-variant: '#3f465c'
+  tertiary-fixed: '#7ffc97'
+  tertiary-fixed-dim: '#62df7d'
+  on-tertiary-fixed: '#002109'
+  on-tertiary-fixed-variant: '#005320'
+  background: '#f8f9ff'
+  on-background: '#0b1c30'
+  surface-variant: '#d3e4fe'
+typography:
+  display-lg:
+    fontFamily: Inter
+    fontSize: 36px
+    fontWeight: '700'
+    lineHeight: 44px
+    letterSpacing: -0.025em
+  display-lg-mobile:
+    fontFamily: Inter
+    fontSize: 28px
+    fontWeight: '700'
+    lineHeight: 36px
+    letterSpacing: -0.02em
+  headline-lg:
+    fontFamily: Inter
+    fontSize: 30px
+    fontWeight: '600'
+    lineHeight: 38px
+    letterSpacing: -0.02em
+  headline-lg-mobile:
+    fontFamily: Inter
+    fontSize: 24px
+    fontWeight: '600'
+    lineHeight: 32px
+    letterSpacing: -0.015em
+  headline-md:
+    fontFamily: Inter
+    fontSize: 22px
+    fontWeight: '600'
+    lineHeight: 28px
+    letterSpacing: -0.015em
+  headline-sm:
+    fontFamily: Inter
+    fontSize: 18px
+    fontWeight: '600'
+    lineHeight: 24px
+    letterSpacing: -0.01em
+  title-md:
+    fontFamily: Inter
+    fontSize: 16px
+    fontWeight: '600'
+    lineHeight: 22px
+    letterSpacing: -0.005em
+  body-lg:
+    fontFamily: Inter
+    fontSize: 16px
+    fontWeight: '400'
+    lineHeight: 24px
+    letterSpacing: 0em
+  body-md:
+    fontFamily: Inter
+    fontSize: 14px
+    fontWeight: '400'
+    lineHeight: 20px
+    letterSpacing: 0em
+  body-sm:
+    fontFamily: Inter
+    fontSize: 13px
+    fontWeight: '400'
+    lineHeight: 18px
+    letterSpacing: 0.005em
+  label-md:
+    fontFamily: Inter
+    fontSize: 13px
+    fontWeight: '500'
+    lineHeight: 16px
+    letterSpacing: 0.01em
+  label-sm:
+    fontFamily: Inter
+    fontSize: 11px
+    fontWeight: '600'
+    lineHeight: 14px
+    letterSpacing: 0.04em
+  tabular-mono:
+    fontFamily: Inter
+    fontSize: 13px
+    fontWeight: '500'
+    lineHeight: 18px
+    letterSpacing: -0.01em
+rounded:
+  sm: 0.25rem
+  DEFAULT: 0.5rem
+  md: 0.75rem
+  lg: 1rem
+  xl: 1.5rem
+  full: 9999px
+spacing:
+  gutter: 1.5rem
+  gutter-mobile: 0.75rem
+  margin: 2rem
+  margin-mobile: 1rem
+  space-xs: 0.25rem
+  space-sm: 0.5rem
+  space-md: 1rem
+  space-lg: 1.5rem
+  space-xl: 2rem
+---
+
+## Brand & Style
+
+The design system is crafted for higher education institutions, deans, department heads, and faculty members who demand immediate clarity, rigorous precision, and friction-free daily operation. The interface must balance academic authority with high-velocity product ergonomics found in developer-grade SaaS tools like Linear, Notion, and Stripe Dashboard.
+
+The visual style is **Corporate Modern Minimalist**:
+- High-density data presentation without visual clutter or unnecessary decorative elements.
+- Crisp horizontal and vertical alignment lines that reflect academic rigor and operational order.
+- Fast, tactile interactions where state shifts (such as marking an entire lecture cohort present) happen with micro-feedback rather than heavy modal flows.
+- Utilitarian neutrality: Chrome recedes to the background, letting status indicators, attendance trends, and analytical charts take immediate visual precedence.
+
+## Colors
+
+The palette establishes institutional clarity through a high-contrast structure grounded in tech-forward slate neutrals, vivid status states, and a dependable electric cobalt primary.
+
+### Palette Architecture
+- **Primary (`#2563EB`)**: Applied deliberately to high-priority interactive touchpoints: active batch attendance triggers, primary submission buttons, selected tab indicators, and progress bars.
+- **Secondary (`#0F172A`)**: Dark slate navy reserved for high-contrast headers, structural navigation sidebars, and critical system alerts.
+- **Neutrals**:
+  - `Canvas / Background`: `#F8FAFC` (Slate 50)
+  - `Surface Containers / Table Rows`: `#FFFFFF`
+  - `Subtle Row Hovers & Inactive Tabs`: `#F1F5F9` (Slate 100)
+  - `Dividers & Ghost Borders`: `#E2E8F0` (Slate 200)
+  - `Muted Text & Column Captions`: `#64748B` (Slate 500)
+  - `Primary Text`: `#0F172A` (Slate 900)
+
+### Attendance Status Semantics
+Color is systematically paired with persistent text labels to maintain strict WCAG AAA accessibility:
+- **Present (`#16A34A`)**: Background tint `#F0FDF4`, border `#BBF7D0`, text `#15803D`.
+- **Absent (`#DC2626`)**: Background tint `#FEF2F2`, border `#FECACA`, text `#B91C1C`.
+- **Late (`#F59E0B`)**: Background tint `#FFFBEB`, border `#FDE68A`, text `#B45309`.
+- **Excused (`#6366F1`)**: Background tint `#EEF2FF`, border `#C7D2FE`, text `#4338CA`.
+
+## Typography
+
+Typography relies on `Inter` across all functional roles to provide a systematic, clean, and legible hierarchy.
+
+### Rules of Engagement
+- **Numerical Alignment**: Use tabular numbers (`font-variant-numeric: tabular-nums`) across student roll numbers, attendance percentages, dates, and timestamp columns to keep data grids mathematically aligned.
+- **Section Headers & Captions**: Category tags and table column heads utilize `label-sm` with uppercase transformation and a slight letter-spacing boost (`0.04em`) to establish crisp section delineation.
+- **Readability Rules**: Body text line height adheres tightly to a 1.4-1.5x ratio to optimize dense student lists and session schedules without causing visual fatigue.
+
+## Layout & Spacing
+
+The layout model utilizes a hybrid 12-column responsive grid paired with persistent navigation regions.
+
+### Structure & Breakpoints
+- **Desktop (1280px and above)**: Collapsible 260px left sidebar alongside a 12-column fluid grid, 2rem canvas margins, and 1.5rem gutters. Maximum container width capped at 1600px for ultra-wide monitors to preserve ocular sweep efficiency.
+- **Tablet (768px - 1279px)**: 8-column layout with 1.25rem gutters. Sidebar collapses into an icon rail (64px) or slide-over drawer.
+- **Mobile (below 768px)**: 4-column layout with 1rem canvas margins and 0.75rem gutters. High-density data tables collapse into stacked cards with segmented quick-toggle controls.
+
+### Density Philosophy
+Internal component padding enforces rhythm:
+- Compact data rows rely on `space-sm` (8px) vertical padding.
+- Metric overview cards and session details utilize `space-lg` (24px) perimeter padding to frame metrics clearly.
+
+## Elevation & Depth
+
+Visual hierarchy is maintained via structural surface layers, subtle tonal transitions, and razor-sharp borders rather than heavy blur shadows, echoing the Stripe Dashboard and Linear paradigm.
+
+### Layer Hierarchy
+1. **Canvas Layer (`#F8FAFC`)**: Base foundational viewport background.
+2. **Surface Layer (`#FFFFFF`)**: Primary work surfaces—tables, content cards, sidebars, and tab containers. Framed by a 1px solid border (`#E2E8F0`).
+3. **Elevated Containers / Dropdowns**: Hover cards, select menus, and filter popovers receive a 1px border (`#E2E8F0`) and an ambient, low-spread micro-shadow: `0 4px 6px -1px rgba(15, 23, 42, 0.05), 0 2px 4px -2px rgba(15, 23, 42, 0.05)`.
+4. **Modals & Command Palettes**: Centered elevated sheets sitting above a 40% opacity slate scrim (`#0F172A` with 40% alpha), framed with `0 20px 25px -5px rgba(15, 23, 42, 0.1), 0 8px 10px -6px rgba(15, 23, 42, 0.08)`.
+
+### Border Integrity
+Every card, tab group, and data container must have a distinct `#E2E8F0` hairline separation to ensure strong edge detection under varied ambient lighting in classrooms and lecture halls.
+
+## Shapes
+
+The interface balances sharp enterprise efficiency with modern software warmth through rounded geometric curves.
+
+### Shape Tokens & Roles
+- **Base Surfaces & Cards (`rounded-xl` / 1.5rem / 24px internal standard)**: Outer bounds of analytical panels, schedule cards, and table wrappers.
+- **Inputs, Buttons, and Data Cells (`rounded-md` / 0.5rem / 8px)**: Interactive operational inputs, select pickers, and individual cell controls.
+- **Quick Action Pills & Status Badges (`rounded-full` / 9999px)**: State badges (Present, Absent, Late, Excused) and bulk filter pills use full pill caps to differentiate states from structured cards.
+
+## Components
+
+### Buttons & Quick Action Controls
+- **Primary Action**: Solid `#2563EB` fill, white text, 8px radius, height 36px (desktop) / 44px (touch target mobile). Subtle hover shift to `#1D4ED8`.
+- **Secondary / Ghost**: White background, 1px solid `#E2E8F0` border, `#0F172A` text. Hover to `#F1F5F9`.
+- **Quick Action Pills**: Segmented button groups for fast attendance toggling. When marking a student:
+  - Default: Slate outline `#E2E8F0` with neutral text.
+  - Active: Instantly illuminates in the corresponding status background, text, and border tokens with a snappy 100ms ease-out transition.
+
+### Status Badges
+- Compact inline pills with 6px vertical and 10px horizontal padding.
+- Consists of a 6px circular dot indicator followed by semibold text (`Present`, `Absent`, `Late`, `Excused`).
+- High-contrast text matches the respective semantic foreground color tokens to ensure compliance against both desktop screens and low-tier classroom projectors.
+
+### Data Tables & Roster Lists
+- **Header**: `#F8FAFC` background, 36px height, uppercase `label-sm` typography with sort directional arrows.
+- **Rows**: `#FFFFFF` background with 1px border-bottom (`#F1F5F9`). Hover triggers background switch to `#F8FAFC`.
+- **Row Anatomy**: Leftmost cell holds a multi-select checkbox followed by student avatar, name, and matriculation ID. Right-aligned columns host the 4-way attendance quick-toggle pill group and historical percentage bar.
+
+### Cards & Analytical Panels
+- White background (`#FFFFFF`), `rounded-xl` corners, framed by 1px solid `#E2E8F0`.
+- Metric cards display aggregate attendance metrics, sparklines, and percentage change labels with dedicated icons in the top-right corner.
+
+### Form Inputs & Filters
+- Clean inputs with 8px radius, height 38px, `#FFFFFF` fill, and `#CBD5E1` border.
+- Active focus state: `#2563EB` hairline border accompanied by a 3px outer ring tinted to `rgba(37, 99, 235, 0.15)`. No default browser outlines.
+
+### Tab Bars & Segmented Views
+- Horizontal track encased in `#F1F5F9` container with 6px padding.
+- Selected tab features `#FFFFFF` background, subtle 1px border (`#E2E8F0`), and `#0F172A` medium-weight text, simulating a physical elevated tab switch.

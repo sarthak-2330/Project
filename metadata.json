@@ -1,0 +1,6 @@
+{
+  "name": "CAMS — College Attendance Management System",
+  "description": "Enterprise-grade College Attendance Management System featuring role-based dashboards, active roll call, shortage alerts, reports, and DSA demonstrations.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
