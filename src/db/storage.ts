@@ -111,7 +111,10 @@ class DatabaseService {
     } catch (e) {
       // ignore
     }
-    return { url: '', anonKey: '' };
+    return {
+      url: import.meta.env.VITE_SUPABASE_URL || 'https://vpkhzuwoapxodwhgcobk.supabase.co',
+      anonKey: import.meta.env.VITE_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZwa2h6dXdvYXB4b2R3aGdjb2JrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTI4NTU0NzMsImV4cCI6MjEwODQzMTQ3M30.H6YORFYStDr85uK3ShpYN2g97UAFmVS9jek0dazFCXw'
+    };
   }
 
   public setCustomSupabaseConfig(url: string, anonKey: string) {
@@ -130,14 +133,25 @@ class DatabaseService {
 
   public async testSupabaseConnection(): Promise<{ success: boolean; message: string }> {
     if (!this.supabase) {
-      return { success: false, message: 'Supabase credentials are not configured.' };
+      this.initSupabase();
+    }
+    if (!this.supabase) {
+      return { success: false, message: 'Supabase client could not be initialized with the provided keys.' };
     }
     try {
-      const { data, error } = await this.supabase.from('profiles').select('id').limit(1);
+      // Test departments query
+      const { data, error } = await this.supabase.from('departments').select('id, department_code').limit(1);
       if (error) {
-        return { success: false, message: `Supabase error: ${error.message}` };
+        // If table doesn't exist yet
+        if (error.code === '42P01' || error.message.includes('does not exist')) {
+          return {
+            success: true,
+            message: 'Connected to Supabase successfully! Next step: Run the SQL migration script in your Supabase SQL Editor to create the tables.'
+          };
+        }
+        return { success: false, message: `Connected to Supabase, but query error: ${error.message}` };
       }
-      return { success: true, message: 'Successfully connected to Supabase PostgreSQL database!' };
+      return { success: true, message: 'Successfully connected to your live Supabase PostgreSQL database!' };
     } catch (err: any) {
       return { success: false, message: err?.message || 'Connection test failed.' };
     }
