@@ -17,6 +17,7 @@ export interface Profile {
   avatar_url?: string;
   account_status: AccountStatus;
   department_id?: string;
+  password?: string;
   created_at: string;
   updated_at: string;
 }

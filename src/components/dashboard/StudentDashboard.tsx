@@ -25,11 +25,27 @@ export const StudentDashboard: React.FC = () => {
   const { studentSummaries, settings, refreshData } = useDatabase();
 
   // Find summary for logged-in student
-  const studentSummary = studentSummaries.find(
-    s => s.student.profile_id === currentUser?.id || s.student.profile?.email === currentUser?.email
-  ) || studentSummaries[0];
+  const student = db.getStudents().find(
+    s => s.profile_id === currentUser?.id || s.profile?.email.toLowerCase() === currentUser?.email?.toLowerCase()
+  );
 
-  const student = studentSummary?.student;
+  const studentSummary = studentSummaries.find(
+    s => (student && s.student.id === student.id) ||
+         s.student.profile_id === currentUser?.id || 
+         s.student.profile?.email?.toLowerCase() === currentUser?.email?.toLowerCase()
+  ) || (student ? {
+    student,
+    total_eligible_sessions: 0,
+    present_sessions: 0,
+    absent_sessions: 0,
+    late_sessions: 0,
+    attended_sessions: 0,
+    attendance_percentage: 100,
+    tier: 'safe' as const,
+    lectures_deficit: 0,
+    consecutive_classes_needed: 0,
+    subject_breakdowns: []
+  } : studentSummaries[0]);
   const percentage = studentSummary?.attendance_percentage ?? 88.4;
   const isEligible = percentage >= settings.attendance_threshold_percentage;
   const isWarning = percentage < settings.attendance_threshold_percentage && percentage >= settings.critical_threshold_percentage;

@@ -28,6 +28,7 @@ import { BiometricTerminalModal } from './components/common/BiometricTerminalMod
 import { CounselingLogModal } from './components/alerts/CounselingLogModal';
 import { UndertakingFormModal } from './components/alerts/UndertakingFormModal';
 import { DisciplinaryCaseModal } from './components/alerts/DisciplinaryCaseModal';
+import { AuthPage } from './components/auth/AuthPage';
 import { Student } from './types';
 
 const MainAppContent: React.FC = () => {
@@ -94,7 +95,7 @@ const MainAppContent: React.FC = () => {
       {/* Main Viewport Container */}
       <main className="flex-1 w-full pt-20 pb-20">
         {/* If student role is logged in, show student-tailored dashboard */}
-        {isStudent && (activeTab === 'dashboard' || activeTab === 'profile') && (
+        {isStudent && activeTab !== 'dsa' && (
           <StudentDashboard />
         )}
 
@@ -113,7 +114,7 @@ const MainAppContent: React.FC = () => {
         )}
 
         {/* Active Roll Call / Take Attendance */}
-        {activeTab === 'attendance' && (
+        {!isStudent && activeTab === 'attendance' && (
           <ActiveRollCall
             onBack={() => setActiveTab('dashboard')}
             onAttendanceSubmitted={() => setActiveTab('dashboard')}
@@ -121,14 +122,14 @@ const MainAppContent: React.FC = () => {
         )}
 
         {/* Students Directory */}
-        {activeTab === 'students' && (
+        {!isStudent && activeTab === 'students' && (
           <StudentsDirectory
             onSelectStudent={(student) => setSelectedStudentForDetail(student)}
           />
         )}
 
         {/* Shortage Alerts / Defaulter Management */}
-        {activeTab === 'alerts' && (
+        {!isStudent && activeTab === 'alerts' && (
           <ShortageAlerts
             onOpenCounselingModal={(name) => setCounselingStudent(name)}
             onOpenUndertakingModal={(name, roll) => setUndertakingStudent({ name, roll: roll || '21CS004' })}
@@ -137,7 +138,7 @@ const MainAppContent: React.FC = () => {
         )}
 
         {/* Reports & Official Exports */}
-        {activeTab === 'reports' && <AttendanceReports />}
+        {!isStudent && activeTab === 'reports' && <AttendanceReports />}
 
         {/* DSA Concepts Laboratory (Mini-Project) */}
         {activeTab === 'dsa' && <DsaConceptsPage />}
@@ -153,6 +154,7 @@ const MainAppContent: React.FC = () => {
         activeTab={activeTab}
         onTabChange={(tab) => setActiveTab(tab)}
         alertCount={defaulters.length}
+        isStudent={isStudent}
       />
 
       {/* Modals & Dialogs */}
@@ -219,11 +221,19 @@ const MainAppContent: React.FC = () => {
   );
 };
 
+const AuthenticatedApp: React.FC = () => {
+  const { currentUser } = useAuth();
+  if (!currentUser) {
+    return <AuthPage />;
+  }
+  return <MainAppContent />;
+};
+
 export default function App() {
   return (
     <AuthProvider>
       <DatabaseProvider>
-        <MainAppContent />
+        <AuthenticatedApp />
       </DatabaseProvider>
     </AuthProvider>
   );

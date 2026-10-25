@@ -38,10 +38,12 @@ export const StudentsDirectory: React.FC<StudentsDirectoryProps> = ({
     department_id: 'dept-cse',
     semester_id: 'sem-5',
     section: 'V-A',
+    password: 'password123',
     guardian_name: '',
     guardian_phone: ''
   });
   const [addError, setAddError] = useState<string | null>(null);
+  const [createdStudentInfo, setCreatedStudentInfo] = useState<{ name: string; roll: string; pass: string } | null>(null);
 
   // Bulk CSV Import Modal State (demonstrates Queue)
   const [showImportModal, setShowImportModal] = useState(false);
@@ -109,6 +111,11 @@ export const StudentsDirectory: React.FC<StudentsDirectoryProps> = ({
       db.addStudent(newStudentForm);
       refreshData();
       setShowAddModal(false);
+      setCreatedStudentInfo({
+        name: newStudentForm.full_name,
+        roll: newStudentForm.enrollment_number.toUpperCase(),
+        pass: newStudentForm.password || 'password123'
+      });
       setNewStudentForm({
         full_name: '',
         email: '',
@@ -116,6 +123,7 @@ export const StudentsDirectory: React.FC<StudentsDirectoryProps> = ({
         department_id: 'dept-cse',
         semester_id: 'sem-5',
         section: 'V-A',
+        password: 'password123',
         guardian_name: '',
         guardian_phone: ''
       });
@@ -598,6 +606,29 @@ export const StudentsDirectory: React.FC<StudentsDirectoryProps> = ({
                 </div>
               </div>
 
+              {/* Student Access Provisioning Section */}
+              <div className="p-3 bg-blue-50/70 border border-blue-200/80 rounded-xl space-y-1.5">
+                <div className="flex items-center gap-1.5 text-blue-900 font-bold">
+                  <span className="material-symbols-outlined text-[16px] text-blue-600">admin_panel_settings</span>
+                  <span>Student Access Provisioning</span>
+                </div>
+                <p className="text-[11px] text-blue-800 leading-relaxed">
+                  Students cannot register themselves on CAMS. By creating this profile, you generate their login credentials.
+                </p>
+                <div>
+                  <label className="block font-semibold text-slate-700 mb-1">Assigned Student Password *</label>
+                  <input
+                    type="text"
+                    required
+                    value={newStudentForm.password}
+                    onChange={(e) => setNewStudentForm({ ...newStudentForm, password: e.target.value })}
+                    className="w-full h-8 px-3 rounded-lg border border-slate-200 bg-white focus:outline-none focus:border-blue-600 font-mono text-xs"
+                    placeholder="password123"
+                  />
+                  <span className="text-[10px] text-slate-400">Share this password with the student.</span>
+                </div>
+              </div>
+
               <div className="flex justify-end gap-2 pt-2">
                 <button
                   type="button"
@@ -614,6 +645,40 @@ export const StudentsDirectory: React.FC<StudentsDirectoryProps> = ({
                 </button>
               </div>
             </form>
+          </div>
+        </div>
+      )}
+
+      {/* Student Created Confirmation Banner for Professor */}
+      {createdStudentInfo && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-xs animate-in fade-in">
+          <div className="bg-white rounded-2xl max-w-sm w-full p-5 shadow-2xl border border-slate-200 animate-in zoom-in-95 text-center">
+            <div className="w-12 h-12 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center mx-auto mb-3">
+              <Check className="w-6 h-6" />
+            </div>
+            <h3 className="text-base font-bold text-slate-900">Student Profile Provisioned!</h3>
+            <p className="text-xs text-slate-500 mt-1">
+              Account created for <span className="font-bold text-slate-800">{createdStudentInfo.name}</span>.
+            </p>
+            <div className="mt-3 p-3 bg-slate-50 rounded-xl border border-slate-200 text-left text-xs space-y-1">
+              <div className="flex justify-between">
+                <span className="text-slate-500">Enrollment ID:</span>
+                <span className="font-mono font-bold text-blue-600">{createdStudentInfo.roll}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-slate-500">Student Password:</span>
+                <span className="font-mono font-bold text-slate-800">{createdStudentInfo.pass}</span>
+              </div>
+            </div>
+            <p className="text-[11px] text-slate-400 mt-2">
+              The student can now log in using these credentials in the Student Portal tab.
+            </p>
+            <button
+              onClick={() => setCreatedStudentInfo(null)}
+              className="mt-4 w-full py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs font-bold cursor-pointer transition-colors"
+            >
+              Done
+            </button>
           </div>
         </div>
       )}

@@ -81,42 +81,67 @@ export const Header: React.FC<HeaderProps> = ({
 
         {/* Center / Desktop Navigation shortcuts */}
         <div className="hidden lg:flex items-center gap-1 bg-slate-100/80 p-1 rounded-xl border border-slate-200/60">
-          <button
-            onClick={() => onNavigateTab && onNavigateTab('dashboard')}
-            className="px-3 py-1.5 text-xs font-semibold rounded-lg text-slate-700 hover:text-blue-600 hover:bg-white transition-all"
-          >
-            Dashboard
-          </button>
-          <button
-            onClick={() => onNavigateTab && onNavigateTab('attendance')}
-            className="px-3 py-1.5 text-xs font-semibold rounded-lg text-slate-700 hover:text-blue-600 hover:bg-white transition-all"
-          >
-            Roll Call
-          </button>
-          <button
-            onClick={() => onNavigateTab && onNavigateTab('students')}
-            className="px-3 py-1.5 text-xs font-semibold rounded-lg text-slate-700 hover:text-blue-600 hover:bg-white transition-all"
-          >
-            Students
-          </button>
-          <button
-            onClick={() => onNavigateTab && onNavigateTab('alerts')}
-            className="px-3 py-1.5 text-xs font-semibold rounded-lg text-slate-700 hover:text-blue-600 hover:bg-white transition-all"
-          >
-            Defaulters
-          </button>
-          <button
-            onClick={() => onNavigateTab && onNavigateTab('reports')}
-            className="px-3 py-1.5 text-xs font-semibold rounded-lg text-slate-700 hover:text-blue-600 hover:bg-white transition-all"
-          >
-            Reports
-          </button>
-          <button
-            onClick={() => onNavigateTab && onNavigateTab('dsa')}
-            className="px-3 py-1.5 text-xs font-semibold rounded-lg text-blue-700 bg-blue-50/70 hover:bg-blue-100/70 transition-all"
-          >
-            DSA Lab
-          </button>
+          {currentUser?.role === 'student' ? (
+            <>
+              <button
+                onClick={() => onNavigateTab && onNavigateTab('dashboard')}
+                className="px-3 py-1.5 text-xs font-semibold rounded-lg text-slate-700 hover:text-blue-600 hover:bg-white transition-all"
+              >
+                My Dossier
+              </button>
+              <button
+                onClick={() => onNavigateTab && onNavigateTab('dashboard')}
+                className="px-3 py-1.5 text-xs font-semibold rounded-lg text-slate-700 hover:text-blue-600 hover:bg-white transition-all"
+              >
+                Academic Records
+              </button>
+              <button
+                onClick={() => onNavigateTab && onNavigateTab('dsa')}
+                className="px-3 py-1.5 text-xs font-semibold rounded-lg text-blue-700 bg-blue-50/70 hover:bg-blue-100/70 transition-all"
+              >
+                DSA Lab
+              </button>
+            </>
+          ) : (
+            <>
+              <button
+                onClick={() => onNavigateTab && onNavigateTab('dashboard')}
+                className="px-3 py-1.5 text-xs font-semibold rounded-lg text-slate-700 hover:text-blue-600 hover:bg-white transition-all"
+              >
+                Dashboard
+              </button>
+              <button
+                onClick={() => onNavigateTab && onNavigateTab('attendance')}
+                className="px-3 py-1.5 text-xs font-semibold rounded-lg text-slate-700 hover:text-blue-600 hover:bg-white transition-all"
+              >
+                Roll Call
+              </button>
+              <button
+                onClick={() => onNavigateTab && onNavigateTab('students')}
+                className="px-3 py-1.5 text-xs font-semibold rounded-lg text-slate-700 hover:text-blue-600 hover:bg-white transition-all"
+              >
+                Students
+              </button>
+              <button
+                onClick={() => onNavigateTab && onNavigateTab('alerts')}
+                className="px-3 py-1.5 text-xs font-semibold rounded-lg text-slate-700 hover:text-blue-600 hover:bg-white transition-all"
+              >
+                Defaulters
+              </button>
+              <button
+                onClick={() => onNavigateTab && onNavigateTab('reports')}
+                className="px-3 py-1.5 text-xs font-semibold rounded-lg text-slate-700 hover:text-blue-600 hover:bg-white transition-all"
+              >
+                Reports
+              </button>
+              <button
+                onClick={() => onNavigateTab && onNavigateTab('dsa')}
+                className="px-3 py-1.5 text-xs font-semibold rounded-lg text-blue-700 bg-blue-50/70 hover:bg-blue-100/70 transition-all"
+              >
+                DSA Lab
+              </button>
+            </>
+          )}
         </div>
 
         {/* Right: Database Indicator, Notifications, Profile Avatar */}

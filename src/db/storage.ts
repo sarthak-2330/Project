@@ -397,6 +397,7 @@ class DatabaseService {
     department_id: string;
     designation: string;
     faculty_code: string;
+    password?: string;
   }): Faculty {
     const profileId = `prof-${Date.now()}`;
     const newProfile: Profile = {
@@ -406,6 +407,7 @@ class DatabaseService {
       role: 'faculty',
       account_status: 'active',
       department_id: f.department_id,
+      password: f.password || 'password123',
       created_at: new Date().toISOString(),
       updated_at: new Date().toISOString()
     };
@@ -480,6 +482,7 @@ class DatabaseService {
     department_id: string;
     semester_id: string;
     section: string;
+    password?: string;
     guardian_name?: string;
     guardian_phone?: string;
     guardian_email?: string;
@@ -497,6 +500,7 @@ class DatabaseService {
       role: 'student',
       account_status: 'active',
       department_id: studentData.department_id,
+      password: studentData.password || 'password123',
       created_at: new Date().toISOString(),
       updated_at: new Date().toISOString()
     };
