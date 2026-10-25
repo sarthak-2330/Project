@@ -220,6 +220,110 @@ export const StudentDashboard: React.FC = () => {
         </div>
       </div>
 
+      {/* Monthly Attendance Calendar Grid */}
+      <div className="bg-white rounded-2xl p-5 shadow-xs border border-slate-200/80 space-y-3">
+        <div className="flex items-center justify-between">
+          <div>
+            <h3 className="text-base font-bold text-slate-900 flex items-center gap-2">
+              <Calendar className="w-4 h-4 text-blue-600" />
+              Monthly Attendance Calendar
+            </h3>
+            <p className="text-slate-500 text-xs">October 2024 • Academic Lecture Cohort Delivery</p>
+          </div>
+          <span className="px-2.5 py-1 rounded-full bg-blue-50 text-blue-700 font-mono font-bold text-[11px]">
+            Oct 2024
+          </span>
+        </div>
+
+        {/* Calendar Day Labels */}
+        <div className="grid grid-cols-7 gap-1 text-center font-bold text-[10px] text-slate-400 uppercase pt-2">
+          <span>Mon</span>
+          <span>Tue</span>
+          <span>Wed</span>
+          <span>Thu</span>
+          <span>Fri</span>
+          <span className="text-slate-300">Sat</span>
+          <span className="text-slate-300">Sun</span>
+        </div>
+
+        {/* Calendar Day Tiles */}
+        <div className="grid grid-cols-7 gap-1.5 text-xs">
+          {/* Day 1 (Tue) - offset by 1 empty tile for Mon */}
+          <div className="h-9 rounded-xl bg-slate-50/30 border border-transparent"></div>
+          
+          {Array.from({ length: 31 }, (_, i) => {
+            const dayNum = i + 1;
+            const dayOfWeek = (i + 1) % 7; // rough approximation
+            const isWeekend = dayOfWeek === 5 || dayOfWeek === 6;
+            
+            // Check student's specific attendance behavior
+            let status: 'present' | 'absent' | 'late' | 'weekend' = 'present';
+            if (isWeekend) {
+              status = 'weekend';
+            } else if (student?.enrollment_number === '21CS002' && (dayNum === 4 || dayNum === 11 || dayNum === 18)) {
+              status = 'absent';
+            } else if (student?.enrollment_number === '21CS004' && (dayNum % 4 === 0)) {
+              status = 'absent';
+            } else if (dayNum === 12 || dayNum === 21) {
+              status = 'late';
+            }
+
+            return (
+              <div
+                key={dayNum}
+                title={`Oct ${dayNum}, 2024: ${status.toUpperCase()}`}
+                className={`h-9 rounded-xl border flex flex-col items-center justify-center transition-all ${
+                  status === 'weekend'
+                    ? 'bg-slate-50/60 border-slate-100 text-slate-300'
+                    : status === 'absent'
+                    ? 'bg-red-50 border-red-200 text-red-800 font-bold'
+                    : status === 'late'
+                    ? 'bg-amber-50 border-amber-200 text-amber-800 font-bold'
+                    : 'bg-emerald-50/80 border-emerald-200 text-emerald-900 font-semibold'
+                } ${dayNum === 24 ? 'ring-2 ring-blue-600 font-extrabold' : ''}`}
+              >
+                <span className="text-[11px] font-mono leading-none">{dayNum}</span>
+                {status !== 'weekend' && (
+                  <span
+                    className={`w-1 h-1 rounded-full mt-0.5 ${
+                      status === 'absent'
+                        ? 'bg-red-600'
+                        : status === 'late'
+                        ? 'bg-amber-600'
+                        : 'bg-emerald-600'
+                    }`}
+                  ></span>
+                )}
+              </div>
+            );
+          })}
+        </div>
+
+        {/* Legend */}
+        <div className="flex items-center justify-between pt-2 border-t border-slate-100 text-[10px] text-slate-500 font-medium">
+          <div className="flex items-center gap-1.5">
+            <span className="w-2 h-2 rounded-full bg-emerald-600"></span>
+            <span>Present</span>
+          </div>
+          <div className="flex items-center gap-1.5">
+            <span className="w-2 h-2 rounded-full bg-red-600"></span>
+            <span>Absent</span>
+          </div>
+          <div className="flex items-center gap-1.5">
+            <span className="w-2 h-2 rounded-full bg-amber-500"></span>
+            <span>Late</span>
+          </div>
+          <div className="flex items-center gap-1.5">
+            <span className="w-2 h-2 rounded-full bg-slate-300"></span>
+            <span>Holiday / Off</span>
+          </div>
+          <div className="flex items-center gap-1">
+            <span className="px-1 rounded bg-blue-100 text-blue-800 font-bold">24</span>
+            <span>Today</span>
+          </div>
+        </div>
+      </div>
+
       {/* Recent Activity Ledger */}
       <div className="bg-white rounded-2xl p-5 shadow-xs border border-slate-200/80 space-y-3">
         <h3 className="text-base font-bold text-slate-900">Recent Attendance Records</h3>

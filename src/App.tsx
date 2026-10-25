@@ -21,6 +21,13 @@ import { SupabaseConfigModal } from './components/settings/SupabaseConfigModal';
 import { StudentDetailModal } from './components/students/StudentDetailModal';
 import { ExportDailyPdfModal } from './components/common/ExportDailyPdfModal';
 import { ClassSwapModal } from './components/common/ClassSwapModal';
+import { TimetableModal } from './components/common/TimetableModal';
+import { SessionSummaryModal } from './components/common/SessionSummaryModal';
+import { LectureNotesModal } from './components/common/LectureNotesModal';
+import { BiometricTerminalModal } from './components/common/BiometricTerminalModal';
+import { CounselingLogModal } from './components/alerts/CounselingLogModal';
+import { UndertakingFormModal } from './components/alerts/UndertakingFormModal';
+import { DisciplinaryCaseModal } from './components/alerts/DisciplinaryCaseModal';
 import { Student } from './types';
 
 const MainAppContent: React.FC = () => {
@@ -31,6 +38,13 @@ const MainAppContent: React.FC = () => {
   const [showSupabaseModal, setShowSupabaseModal] = useState(false);
   const [showExportModal, setShowExportModal] = useState(false);
   const [showClassSwapModal, setShowClassSwapModal] = useState(false);
+  const [showTimetableModal, setShowTimetableModal] = useState(false);
+  const [showSessionSummaryModal, setShowSessionSummaryModal] = useState(false);
+  const [showLectureNotesModal, setShowLectureNotesModal] = useState(false);
+  const [showBiometricModal, setShowBiometricModal] = useState(false);
+  const [counselingStudent, setCounselingStudent] = useState<string | null>(null);
+  const [undertakingStudent, setUndertakingStudent] = useState<{ name: string; roll: string } | null>(null);
+  const [disciplinaryStudent, setDisciplinaryStudent] = useState<{ name: string; roll: string } | null>(null);
   const [selectedStudentForDetail, setSelectedStudentForDetail] = useState<Student | null>(null);
 
   // Derive dynamic page title matching Stitch
@@ -91,6 +105,10 @@ const MainAppContent: React.FC = () => {
             onNavigateTab={(tab) => setActiveTab(tab)}
             onOpenExportModal={() => setShowExportModal(true)}
             onOpenClassSwapModal={() => setShowClassSwapModal(true)}
+            onOpenTimetable={() => setShowTimetableModal(true)}
+            onOpenSessionSummary={() => setShowSessionSummaryModal(true)}
+            onOpenLectureNotes={() => setShowLectureNotesModal(true)}
+            onOpenBiometricTerminal={() => setShowBiometricModal(true)}
           />
         )}
 
@@ -112,8 +130,9 @@ const MainAppContent: React.FC = () => {
         {/* Shortage Alerts / Defaulter Management */}
         {activeTab === 'alerts' && (
           <ShortageAlerts
-            onOpenCounselingModal={(name) => alert(`Counseling session scheduled with Mentor Dr. Rao for ${name} on Oct 25, 11:30 AM`)}
-            onOpenUndertakingModal={(name) => alert(`Standard Academic Disciplinary Undertaking generated and sent to guardian of ${name}`)}
+            onOpenCounselingModal={(name) => setCounselingStudent(name)}
+            onOpenUndertakingModal={(name, roll) => setUndertakingStudent({ name, roll: roll || '21CS004' })}
+            onOpenDisciplinaryModal={(name, roll) => setDisciplinaryStudent({ name: name || 'Rohan Kulkarni', roll: roll || '21ME038' })}
           />
         )}
 
@@ -133,10 +152,10 @@ const MainAppContent: React.FC = () => {
       <BottomNav
         activeTab={activeTab}
         onTabChange={(tab) => setActiveTab(tab)}
-        alertCount={defaulters.length > 0 ? 5 : 0}
+        alertCount={defaulters.length}
       />
 
-      {/* Modals */}
+      {/* Modals & Dialogs */}
       <SupabaseConfigModal
         isOpen={showSupabaseModal}
         onClose={() => setShowSupabaseModal(false)}
@@ -155,6 +174,46 @@ const MainAppContent: React.FC = () => {
       <StudentDetailModal
         student={selectedStudentForDetail}
         onClose={() => setSelectedStudentForDetail(null)}
+      />
+
+      <TimetableModal
+        isOpen={showTimetableModal}
+        onClose={() => setShowTimetableModal(false)}
+      />
+
+      <SessionSummaryModal
+        isOpen={showSessionSummaryModal}
+        onClose={() => setShowSessionSummaryModal(false)}
+      />
+
+      <LectureNotesModal
+        isOpen={showLectureNotesModal}
+        onClose={() => setShowLectureNotesModal(false)}
+      />
+
+      <BiometricTerminalModal
+        isOpen={showBiometricModal}
+        onClose={() => setShowBiometricModal(false)}
+      />
+
+      <CounselingLogModal
+        isOpen={!!counselingStudent}
+        studentName={counselingStudent || 'Ananya Sharma'}
+        onClose={() => setCounselingStudent(null)}
+      />
+
+      <UndertakingFormModal
+        isOpen={!!undertakingStudent}
+        studentName={undertakingStudent?.name || 'Ishaan Verma'}
+        enrollmentNumber={undertakingStudent?.roll || '21CS004'}
+        onClose={() => setUndertakingStudent(null)}
+      />
+
+      <DisciplinaryCaseModal
+        isOpen={!!disciplinaryStudent}
+        studentName={disciplinaryStudent?.name || 'Rohan Kulkarni'}
+        enrollmentNumber={disciplinaryStudent?.roll || '21ME038'}
+        onClose={() => setDisciplinaryStudent(null)}
       />
     </div>
   );

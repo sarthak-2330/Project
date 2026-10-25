@@ -523,6 +523,56 @@ COHORT_NAMES.forEach((name, idx) => {
   });
 });
 
+// Multi-department cohort students for ECE, ME, and Civil
+const OTHER_DEPT_STUDENTS = [
+  // Electronics & Communication (ECE)
+  { name: 'Siddharth Roy', roll: '21EC014', deptId: 'dept-ece', phone: '+91 98451 90211' },
+  { name: 'Priya Nair', roll: '21EC022', deptId: 'dept-ece', phone: '+91 98452 33411' },
+  { name: 'Rahul Mehta', roll: '21EC007', deptId: 'dept-ece', phone: '+91 98453 88921' },
+  { name: 'Maya Sen', roll: '21EC031', deptId: 'dept-ece', phone: '+91 98454 55102' },
+  { name: 'Vikram Joshi', roll: '21EC003', deptId: 'dept-ece', phone: '+91 98455 11983' },
+  { name: 'Pooja Menon', roll: '21EC018', deptId: 'dept-ece', phone: '+91 98456 77204' },
+  // Mechanical Engineering (ME)
+  { name: 'Aman Verma', roll: '21ME012', deptId: 'dept-me', phone: '+91 98221 44019' },
+  { name: 'Rajesh Pillai', roll: '21ME025', deptId: 'dept-me', phone: '+91 98222 66318' },
+  { name: 'Sameer Deshpande', roll: '21ME009', deptId: 'dept-me', phone: '+91 98223 88127' },
+  { name: 'Karthik Rao', roll: '21ME017', deptId: 'dept-me', phone: '+91 98224 22716' },
+  // Civil Engineering (CE)
+  { name: 'Tariq Khan', roll: '21CE005', deptId: 'dept-ce', phone: '+91 97111 55901' },
+  { name: 'Sneha Patil', roll: '21CE019', deptId: 'dept-ce', phone: '+91 97112 77412' },
+  { name: 'Deepa Rawat', roll: '21CE011', deptId: 'dept-ce', phone: '+91 97113 99123' },
+  { name: 'Nitin Gadgil', roll: '21CE002', deptId: 'dept-ce', phone: '+91 97114 11834' },
+  { name: 'Harish Kumar', roll: '21CE028', deptId: 'dept-ce', phone: '+91 97115 33245' }
+];
+
+OTHER_DEPT_STUDENTS.forEach((item, idx) => {
+  const profileId = `student-profile-${item.roll.toLowerCase()}`;
+  SEED_PROFILES.push({
+    id: profileId,
+    full_name: item.name,
+    email: `${item.name.toLowerCase().replace(/\s+/g, '.')}.${item.roll.toLowerCase()}@cams.edu`,
+    role: 'student',
+    account_status: 'active',
+    department_id: item.deptId,
+    created_at: '2024-08-01T08:00:00Z',
+    updated_at: '2024-10-24T08:00:00Z'
+  });
+
+  SEED_STUDENTS.push({
+    id: `stud-${item.roll.toLowerCase()}`,
+    profile_id: profileId,
+    enrollment_number: item.roll,
+    department_id: item.deptId,
+    academic_year_id: 'ay-2024-25',
+    semester_id: 'sem-5',
+    section: 'V-A',
+    admission_year: 2021,
+    status: 'active',
+    guardian_name: `Guardian of ${item.name}`,
+    guardian_phone: item.phone
+  });
+});
+
 // Enrollments
 export const SEED_ENROLLMENTS: Enrollment[] = SEED_STUDENTS.map(s => ({
   id: `enr-${s.id}`,
@@ -561,28 +611,47 @@ PAST_DATES.forEach((date, i) => {
     created_at: `${date}T09:30:00Z`
   });
 
-  // Assign individual student records
-  SEED_STUDENTS.filter(s => s.department_id === 'dept-cse').forEach(student => {
+  // Assign individual student records across all cohorts
+  SEED_STUDENTS.forEach(student => {
     let status: 'present' | 'absent' | 'late' = 'present';
     
-    // Maintain exact historical percentages from Google Stitch
+    // Key Stitch reference test accounts:
     if (student.enrollment_number === '21CS001') {
-      // Aarav Patel ~ 91.2%
+      // Aarav Patel ~ 91.3%
       status = i === 4 || i === 12 ? 'absent' : 'present';
     } else if (student.enrollment_number === '21CS002') {
-      // Ananya Sharma ~ 73.8% (Shortage Warning)
+      // Ananya Sharma ~ 73.9% (Shortage Warning)
       status = i === 2 || i === 6 || i === 10 || i === 15 || i === 18 || i === 21 ? 'absent' : (i === 12 ? 'late' : 'present');
     } else if (student.enrollment_number === '21CS003') {
-      // Devendra Singh ~ 85.0%
+      // Devendra Singh ~ 87.0%
       status = i === 3 || i === 9 || i === 17 ? 'absent' : 'present';
     } else if (student.enrollment_number === '21CS004') {
-      // Ishaan Verma ~ 67.5% (Critical Defaulter, 6 lectures short)
+      // Ishaan Verma ~ 65.2% (Critical Defaulter)
       status = i % 3 === 0 ? 'absent' : (i % 5 === 0 ? 'late' : 'present');
+    } else if (student.enrollment_number === '21ME038') {
+      // Rohan Kulkarni ~ 60.9% (Critical Exam Hold)
+      status = (i % 2 === 0 && i < 18) ? 'absent' : 'present';
+    } else if (student.enrollment_number === '21ME012') {
+      // Aman Verma ~ 65.2% (Critical Defaulter)
+      status = (i % 3 === 0) ? 'absent' : 'present';
+    } else if (student.enrollment_number === '21EC014') {
+      // Siddharth Roy ~ 69.6% (Warning Tier)
+      status = (i % 3 === 1 && i < 20) ? 'absent' : 'present';
+    } else if (student.enrollment_number === '21EC022') {
+      // Priya Nair ~ 73.9% (Warning Tier)
+      status = (i === 1 || i === 5 || i === 9 || i === 13 || i === 17 || i === 21) ? 'absent' : 'present';
+    } else if (student.enrollment_number === '21CE005') {
+      // Tariq Khan ~ 69.6% (Warning Tier)
+      status = (i === 2 || i === 6 || i === 8 || i === 12 || i === 15 || i === 19 || i === 22) ? 'absent' : 'present';
+    } else if (student.enrollment_number === '21CE011') {
+      // Deepa Rawat ~ 60.9% (Critical Defaulter)
+      status = (i % 2 === 1 && i < 18) ? 'absent' : 'present';
     } else {
-      // Cohort distribution: ~88% present overall
-      const rand = (parseInt(student.enrollment_number.slice(4) || '1', 10) * 17 + i * 13) % 100;
-      if (rand < 82) status = 'present';
-      else if (rand < 92) status = 'late';
+      // Cohort synthetic distribution based on roll number
+      const rollDigit = parseInt(student.enrollment_number.replace(/\D/g, '') || '1', 10);
+      const score = (rollDigit * 19 + i * 11) % 100;
+      if (score < 75) status = 'present';
+      else if (score < 86) status = 'late';
       else status = 'absent';
     }
 

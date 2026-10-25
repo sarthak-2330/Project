@@ -173,6 +173,39 @@ class DatabaseService {
   // --- LOCAL PERSISTENCE INITIALIZATION ---
 
   private ensureLocalStorageSeeded() {
+    const CURRENT_SEED_VERSION = 'v3_dynamic_defaulters';
+    const isNewVersion = localStorage.getItem('cams_seed_version') !== CURRENT_SEED_VERSION;
+
+    if (isNewVersion) {
+      // Refresh cohort data across all departments with rich records
+      localStorage.setItem(STORAGE_KEYS.PROFILES, JSON.stringify(SEED_PROFILES));
+      localStorage.setItem(STORAGE_KEYS.DEPARTMENTS, JSON.stringify(SEED_DEPARTMENTS));
+      localStorage.setItem(STORAGE_KEYS.ACADEMIC_YEARS, JSON.stringify(SEED_ACADEMIC_YEARS));
+      localStorage.setItem(STORAGE_KEYS.SEMESTERS, JSON.stringify(SEED_SEMESTERS));
+      localStorage.setItem(STORAGE_KEYS.CLASS_SECTIONS, JSON.stringify(SEED_CLASS_SECTIONS));
+      localStorage.setItem(STORAGE_KEYS.SUBJECTS, JSON.stringify(SEED_SUBJECTS));
+      localStorage.setItem(STORAGE_KEYS.FACULTY, JSON.stringify(SEED_FACULTY));
+      localStorage.setItem(STORAGE_KEYS.SUBJECT_ASSIGNMENTS, JSON.stringify(SEED_SUBJECT_ASSIGNMENTS));
+      localStorage.setItem(STORAGE_KEYS.STUDENTS, JSON.stringify(SEED_STUDENTS));
+      localStorage.setItem(STORAGE_KEYS.ENROLLMENTS, JSON.stringify(SEED_ENROLLMENTS));
+      localStorage.setItem(STORAGE_KEYS.ATTENDANCE_SESSIONS, JSON.stringify(SEED_ATTENDANCE_SESSIONS));
+      localStorage.setItem(STORAGE_KEYS.ATTENDANCE_RECORDS, JSON.stringify(SEED_ATTENDANCE_RECORDS));
+      if (!localStorage.getItem(STORAGE_KEYS.SETTINGS)) {
+        localStorage.setItem(STORAGE_KEYS.SETTINGS, JSON.stringify(INITIAL_SETTINGS));
+      }
+      if (!localStorage.getItem(STORAGE_KEYS.NOTIFICATIONS)) {
+        localStorage.setItem(STORAGE_KEYS.NOTIFICATIONS, JSON.stringify(SEED_NOTIFICATIONS));
+      }
+      if (!localStorage.getItem(STORAGE_KEYS.CORRECTIONS)) {
+        localStorage.setItem(STORAGE_KEYS.CORRECTIONS, JSON.stringify(SEED_CORRECTION_REQUESTS));
+      }
+      if (!localStorage.getItem(STORAGE_KEYS.AUDIT_LOGS)) {
+        localStorage.setItem(STORAGE_KEYS.AUDIT_LOGS, JSON.stringify(SEED_AUDIT_LOGS));
+      }
+      localStorage.setItem('cams_seed_version', CURRENT_SEED_VERSION);
+      return;
+    }
+
     if (!localStorage.getItem(STORAGE_KEYS.SETTINGS)) {
       localStorage.setItem(STORAGE_KEYS.SETTINGS, JSON.stringify(INITIAL_SETTINGS));
     }

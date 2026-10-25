@@ -12,16 +12,24 @@ interface FacultyDashboardProps {
   onNavigateTab: (tab: string) => void;
   onOpenExportModal: () => void;
   onOpenClassSwapModal: () => void;
+  onOpenTimetable?: () => void;
+  onOpenSessionSummary?: () => void;
+  onOpenLectureNotes?: () => void;
+  onOpenBiometricTerminal?: () => void;
 }
 
 export const FacultyDashboard: React.FC<FacultyDashboardProps> = ({
   onTakeAttendance,
   onNavigateTab,
   onOpenExportModal,
-  onOpenClassSwapModal
+  onOpenClassSwapModal,
+  onOpenTimetable,
+  onOpenSessionSummary,
+  onOpenLectureNotes,
+  onOpenBiometricTerminal
 }) => {
   const { currentUser } = useAuth();
-  const { studentSummaries, defaulters, activeTodaySession } = useDatabase();
+  const { studentSummaries, defaulters, settings, activeTodaySession } = useDatabase();
 
   const [isSyncing, setIsSyncing] = useState(false);
   const [syncTimestamp, setSyncTimestamp] = useState('Synced just now');
@@ -35,8 +43,8 @@ export const FacultyDashboard: React.FC<FacultyDashboardProps> = ({
   };
 
   // Compute live aggregates from database
-  const totalEnrolled = studentSummaries.length > 0 ? 842 : 842;
-  const defaultersCount = defaulters.length > 0 ? defaulters.length : 24;
+  const totalEnrolled = studentSummaries.length > 0 ? studentSummaries.length : 842;
+  const defaultersCount = defaulters.length;
 
   // Compute today's quorum
   const todayQuorum = '88.4%';
@@ -180,7 +188,7 @@ export const FacultyDashboard: React.FC<FacultyDashboardProps> = ({
             </div>
             <p className="text-[11px] font-semibold text-red-600 flex items-center gap-0.5 mt-0.5">
               <span className="material-symbols-outlined text-[13px]">priority_high</span>
-              &lt;75% threshold
+              &lt;{settings.attendance_threshold_percentage}% threshold
             </p>
           </div>
         </div>
@@ -281,8 +289,8 @@ export const FacultyDashboard: React.FC<FacultyDashboardProps> = ({
             <p className="text-xs text-slate-500">Scheduled academic delivery sessions</p>
           </div>
           <button 
-            onClick={() => onNavigateTab('attendance')}
-            className="text-xs font-semibold text-blue-600 hover:text-blue-800 flex items-center gap-0.5 cursor-pointer"
+            onClick={onOpenTimetable ? onOpenTimetable : () => onNavigateTab('attendance')}
+            className="text-xs font-semibold text-blue-600 hover:text-blue-800 flex items-center gap-0.5 cursor-pointer active:scale-95 transition-all"
           >
             Full Timetable
             <span className="material-symbols-outlined text-[16px]">chevron_right</span>
@@ -390,10 +398,11 @@ export const FacultyDashboard: React.FC<FacultyDashboardProps> = ({
               </div>
             </div>
             <button 
-              onClick={() => onNavigateTab('reports')}
-              className="text-xs text-blue-600 font-semibold hover:underline cursor-pointer"
+              onClick={onOpenSessionSummary ? onOpenSessionSummary : () => onNavigateTab('reports')}
+              className="text-xs text-blue-600 font-semibold hover:underline cursor-pointer flex items-center gap-1"
             >
-              View Summary
+              <span>View Summary</span>
+              <span className="material-symbols-outlined text-[14px]">arrow_forward</span>
             </button>
           </div>
         </div>
@@ -432,24 +441,37 @@ export const FacultyDashboard: React.FC<FacultyDashboardProps> = ({
               <span className="material-symbols-outlined text-[14px] text-amber-600">notifications_active</span>
               Auto-reminder queued for 01:45 PM
             </span>
-            <button className="text-xs text-slate-600 font-medium hover:underline cursor-pointer">
-              Lecture Notes
+            <button 
+              onClick={onOpenLectureNotes}
+              className="text-xs text-blue-600 hover:text-blue-800 font-semibold hover:underline cursor-pointer flex items-center gap-1"
+            >
+              <span>Lecture Notes</span>
+              <span className="material-symbols-outlined text-[14px]">open_in_new</span>
             </button>
           </div>
         </div>
       </div>
 
       {/* Biometric Terminal Status banner matching Stitch */}
-      <div className="bg-[#dce9ff]/70 rounded-2xl p-4 sm:p-5 relative overflow-hidden border border-blue-200/60">
+      <div 
+        onClick={onOpenBiometricTerminal}
+        role="button"
+        tabIndex={0}
+        onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') onOpenBiometricTerminal?.(); }}
+        className="bg-[#dce9ff]/70 hover:bg-[#dce9ff] transition-all cursor-pointer rounded-2xl p-4 sm:p-5 relative overflow-hidden border border-blue-200/60 group"
+      >
         <div className="flex items-center justify-between gap-3">
           <div className="space-y-0.5 min-w-0">
-            <span className="text-[11px] font-bold uppercase tracking-wider text-blue-700">
-              Biometric Terminal Status
-            </span>
-            <h4 className="text-base font-bold text-slate-900">LH-302 Terminal Synced</h4>
-            <p className="text-xs text-slate-600">Hardware beacon active with 99.8% mesh fidelity.</p>
+            <div className="flex items-center gap-2">
+              <span className="text-[11px] font-bold uppercase tracking-wider text-blue-700">
+                Biometric Terminal Status
+              </span>
+              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+            </div>
+            <h4 className="text-base font-bold text-slate-900 group-hover:text-blue-900 transition-colors">LH-302 Terminal Synced</h4>
+            <p className="text-xs text-slate-600">Hardware beacon active with 99.8% mesh fidelity. Click for live diagnostic telemetry.</p>
           </div>
-          <div className="w-12 h-12 rounded-full bg-white flex items-center justify-center text-emerald-600 shadow-xs shrink-0">
+          <div className="w-12 h-12 rounded-full bg-white flex items-center justify-center text-emerald-600 shadow-xs shrink-0 group-hover:scale-105 transition-transform">
             <span className="material-symbols-outlined text-[26px]">sensors</span>
           </div>
         </div>

@@ -20,16 +20,23 @@ import {
 } from 'lucide-react';
 
 export const AcademicSettings: React.FC = () => {
-  const { settings, departments, subjects, faculty, refreshData } = useDatabase();
+  const { settings, departments, subjects, faculty, correctionRequests, defaulters, refreshData } = useDatabase();
   const { currentUser } = useAuth();
 
-  const [activeTab, setActiveTab] = useState<'thresholds' | 'departments' | 'subjects' | 'audit'>('thresholds');
+  const [activeTab, setActiveTab] = useState<'thresholds' | 'departments' | 'subjects' | 'corrections' | 'audit'>('thresholds');
 
   // Form states for thresholds
   const [threshold, setThreshold] = useState(settings.attendance_threshold_percentage);
   const [criticalThreshold, setCriticalThreshold] = useState(settings.critical_threshold_percentage);
   const [lateCountAttended, setLateCountAttended] = useState(settings.late_counts_as_attended);
   const [toastMsg, setToastMsg] = useState<string | null>(null);
+
+  // Sync state whenever settings change in database
+  React.useEffect(() => {
+    setThreshold(settings.attendance_threshold_percentage);
+    setCriticalThreshold(settings.critical_threshold_percentage);
+    setLateCountAttended(settings.late_counts_as_attended);
+  }, [settings.attendance_threshold_percentage, settings.critical_threshold_percentage, settings.late_counts_as_attended]);
 
   // Add Department Modal
   const [showAddDept, setShowAddDept] = useState(false);
@@ -146,6 +153,14 @@ export const AcademicSettings: React.FC = () => {
             Subjects ({subjects.length})
           </button>
           <button
+            onClick={() => setActiveTab('corrections')}
+            className={`px-3.5 py-1.5 rounded-xl font-semibold transition-all cursor-pointer ${
+              activeTab === 'corrections' ? 'bg-blue-600 text-white shadow-xs' : 'bg-slate-100 text-slate-600'
+            }`}
+          >
+            Correction Petitions ({correctionRequests.filter(r => r.request_status === 'pending').length} Pending)
+          </button>
+          <button
             onClick={() => setActiveTab('audit')}
             className={`px-3.5 py-1.5 rounded-xl font-semibold transition-all cursor-pointer ${
               activeTab === 'audit' ? 'bg-blue-600 text-white shadow-xs' : 'bg-slate-100 text-slate-600'
@@ -169,6 +184,74 @@ export const AcademicSettings: React.FC = () => {
             </p>
           </div>
 
+          {/* Quick Presets matching Institutional Policies */}
+          <div className="bg-slate-50 p-3 rounded-xl border border-slate-200/70">
+            <span className="text-[11px] font-bold uppercase tracking-wider text-slate-500 block mb-2">
+              Institutional Policy Presets (Quick Apply)
+            </span>
+            <div className="flex flex-wrap gap-2">
+              <button
+                type="button"
+                onClick={() => {
+                  setThreshold(75);
+                  setCriticalThreshold(65);
+                }}
+                className={`px-3 py-1.5 rounded-lg text-xs font-semibold cursor-pointer transition-all ${
+                  threshold === 75 && criticalThreshold === 65
+                    ? 'bg-blue-600 text-white shadow-xs'
+                    : 'bg-white text-slate-700 border border-slate-200 hover:bg-slate-100'
+                }`}
+              >
+                Standard (75% Gate / 65% Critical)
+              </button>
+
+              <button
+                type="button"
+                onClick={() => {
+                  setThreshold(80);
+                  setCriticalThreshold(70);
+                }}
+                className={`px-3 py-1.5 rounded-lg text-xs font-semibold cursor-pointer transition-all ${
+                  threshold === 80 && criticalThreshold === 70
+                    ? 'bg-blue-600 text-white shadow-xs'
+                    : 'bg-white text-slate-700 border border-slate-200 hover:bg-slate-100'
+                }`}
+              >
+                Strict Regulation (80% Gate / 70% Critical)
+              </button>
+
+              <button
+                type="button"
+                onClick={() => {
+                  setThreshold(70);
+                  setCriticalThreshold(60);
+                }}
+                className={`px-3 py-1.5 rounded-lg text-xs font-semibold cursor-pointer transition-all ${
+                  threshold === 70 && criticalThreshold === 60
+                    ? 'bg-blue-600 text-white shadow-xs'
+                    : 'bg-white text-slate-700 border border-slate-200 hover:bg-slate-100'
+                }`}
+              >
+                Lenient Term (70% Gate / 60% Critical)
+              </button>
+
+              <button
+                type="button"
+                onClick={() => {
+                  setThreshold(85);
+                  setCriticalThreshold(75);
+                }}
+                className={`px-3 py-1.5 rounded-lg text-xs font-semibold cursor-pointer transition-all ${
+                  threshold === 85 && criticalThreshold === 75
+                    ? 'bg-blue-600 text-white shadow-xs'
+                    : 'bg-white text-slate-700 border border-slate-200 hover:bg-slate-100'
+                }`}
+              >
+                Audit Gate (85% Gate / 75% Critical)
+              </button>
+            </div>
+          </div>
+
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label className="block font-semibold text-slate-700 mb-1">
@@ -176,14 +259,14 @@ export const AcademicSettings: React.FC = () => {
               </label>
               <input
                 type="number"
-                min="50"
+                min="10"
                 max="100"
                 step="0.5"
                 value={threshold}
                 onChange={(e) => setThreshold(Number(e.target.value))}
                 className="w-full h-10 px-3 rounded-xl border border-slate-200 font-mono font-bold text-sm focus:outline-none focus:border-blue-600"
               />
-              <span className="text-[11px] text-slate-400 mt-1 block">Default: 75.0% (University Regulation)</span>
+              <span className="text-[11px] text-slate-400 mt-1 block">Students below this percentage are flagged as Defaulters.</span>
             </div>
 
             <div>
@@ -192,15 +275,28 @@ export const AcademicSettings: React.FC = () => {
               </label>
               <input
                 type="number"
-                min="40"
+                min="10"
                 max="90"
                 step="0.5"
                 value={criticalThreshold}
                 onChange={(e) => setCriticalThreshold(Number(e.target.value))}
                 className="w-full h-10 px-3 rounded-xl border border-slate-200 font-mono font-bold text-sm focus:outline-none focus:border-blue-600"
               />
-              <span className="text-[11px] text-slate-400 mt-1 block">Below this, Dean Disciplinary hearing triggers.</span>
+              <span className="text-[11px] text-slate-400 mt-1 block">Below this, severe Critical Alert & Exam Hold trigger.</span>
             </div>
+          </div>
+
+          {/* Live Impact Preview Banner */}
+          <div className="bg-[#e5eeff] rounded-xl p-3.5 border border-blue-200/70 flex items-center justify-between gap-3">
+            <div className="flex items-center gap-2.5 min-w-0">
+              <span className="material-symbols-outlined text-blue-700 text-[20px] shrink-0">analytics</span>
+              <div className="text-xs text-blue-900 leading-snug">
+                <span className="font-bold">Current Live Defaulters:</span> {defaulters.length} students currently below gate ({defaulters.filter(d => d.tier === 'critical').length} Critical, {defaulters.filter(d => d.tier === 'warning').length} Warning).
+              </div>
+            </div>
+            <span className="shrink-0 text-[11px] bg-blue-600 text-white font-bold px-2 py-0.5 rounded-full">
+              Reactive
+            </span>
           </div>
 
           <div className="pt-2 border-t border-slate-100 space-y-3">
@@ -223,9 +319,10 @@ export const AcademicSettings: React.FC = () => {
           <div className="flex justify-end pt-2">
             <button
               type="submit"
-              className="px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold cursor-pointer shadow-xs"
+              className="px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold cursor-pointer shadow-xs active:scale-95 transition-all flex items-center gap-1.5"
             >
-              Save Policy Changes
+              <CheckCircle2 className="w-4 h-4" />
+              <span>Save Policy Changes & Re-evaluate Defaulters</span>
             </button>
           </div>
         </form>
@@ -294,6 +391,88 @@ export const AcademicSettings: React.FC = () => {
                 </span>
               </div>
             ))}
+          </div>
+        </div>
+      )}
+
+      {/* Tab: Attendance Correction Petitions */}
+      {activeTab === 'corrections' && (
+        <div className="bg-white rounded-2xl p-5 shadow-xs border border-slate-200/80 space-y-4">
+          <div className="border-b border-slate-100 pb-3">
+            <h3 className="text-sm font-bold text-slate-900 flex items-center gap-2">
+              <ShieldCheck className="w-4 h-4 text-blue-600" />
+              Attendance Correction Requests & Review
+            </h3>
+            <p className="text-slate-500">Authorized administrative approval workflow for attendance modifications</p>
+          </div>
+
+          <div className="space-y-3">
+            {correctionRequests.length === 0 ? (
+              <p className="py-6 text-center text-slate-400">No correction petitions on file.</p>
+            ) : (
+              correctionRequests.map(req => (
+                <div key={req.id} className="p-4 rounded-xl border border-slate-200/80 bg-slate-50/50 space-y-2">
+                  <div className="flex items-start justify-between gap-2">
+                    <div>
+                      <div className="flex items-center gap-2">
+                        <span className="font-bold text-slate-900 text-sm">{req.student_name}</span>
+                        <span className="text-slate-400 font-mono text-[11px]">({req.subject_name})</span>
+                      </div>
+                      <span className="text-[10px] text-slate-500">
+                        Session Date: {req.attendance_date} • Requested: <strong className="uppercase text-blue-600">{req.requested_status}</strong> (from {req.previous_status || 'absent'})
+                      </span>
+                    </div>
+
+                    <span
+                      className={`px-2 py-0.5 rounded-full font-bold uppercase text-[9px] ${
+                        req.request_status === 'approved'
+                          ? 'bg-emerald-100 text-emerald-800'
+                          : req.request_status === 'rejected'
+                          ? 'bg-red-100 text-red-800'
+                          : 'bg-amber-100 text-amber-800'
+                      }`}
+                    >
+                      {req.request_status}
+                    </span>
+                  </div>
+
+                  <p className="p-2.5 rounded-lg bg-white border border-slate-200 text-slate-700 italic">
+                    "{req.reason}"
+                  </p>
+
+                  {req.request_status === 'pending' && (
+                    <div className="flex justify-end gap-2 pt-1">
+                      <button
+                        onClick={() => {
+                          db.reviewCorrectionRequest(req.id, 'rejected', currentUser?.id || 'admin', 'Rejected by administrator: insufficient evidence provided.');
+                          refreshData();
+                          setToastMsg('Petition rejected and requester notified.');
+                        }}
+                        className="px-3 py-1 rounded-lg bg-red-50 text-red-700 hover:bg-red-100 font-semibold cursor-pointer"
+                      >
+                        Reject
+                      </button>
+                      <button
+                        onClick={() => {
+                          db.reviewCorrectionRequest(req.id, 'approved', currentUser?.id || 'admin', 'Approved per official documentation verified.');
+                          refreshData();
+                          setToastMsg('Petition approved and attendance record updated securely.');
+                        }}
+                        className="px-3 py-1 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white font-semibold cursor-pointer shadow-xs"
+                      >
+                        Approve & Update Record
+                      </button>
+                    </div>
+                  )}
+
+                  {req.review_note && (
+                    <p className="text-[10px] text-slate-500 font-mono">
+                      Decision Note: {req.review_note} (Reviewed at {req.reviewed_at ? new Date(req.reviewed_at).toLocaleDateString() : 'N/A'})
+                    </p>
+                  )}
+                </div>
+              ))
+            )}
           </div>
         </div>
       )}

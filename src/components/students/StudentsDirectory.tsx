@@ -5,9 +5,10 @@
 
 import React, { useState, useMemo } from 'react';
 import { useDatabase } from '../../context/DatabaseContext';
-import { StudentAttendanceSummary, Student } from '../../types';
+import { Student } from '../../types';
 import { Search, QrCode, UploadCloud, UserPlus, X, Check, AlertCircle } from 'lucide-react';
 import { db } from '../../db/storage';
+import { StudentQrScannerModal } from './StudentQrScannerModal';
 
 interface StudentsDirectoryProps {
   onSelectStudent?: (student: Student) => void;
@@ -24,6 +25,9 @@ export const StudentsDirectory: React.FC<StudentsDirectoryProps> = ({
   const [onlyBelow75, setOnlyBelow75] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const pageSize = 5;
+
+  // QR / RFID Scanner Modal State
+  const [showQrModal, setShowQrModal] = useState(false);
 
   // Add Student Modal State
   const [showAddModal, setShowAddModal] = useState(false);
@@ -180,8 +184,11 @@ export const StudentsDirectory: React.FC<StudentsDirectoryProps> = ({
             className="w-full h-11 pl-10 pr-10 bg-white text-slate-900 placeholder:text-slate-400 text-xs sm:text-sm rounded-xl shadow-xs border border-slate-200 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100 transition-all"
           />
           <button
+            type="button"
+            onClick={() => setShowQrModal(true)}
             aria-label="QR scanner"
-            className="absolute inset-y-0 right-0 pr-3.5 flex items-center text-slate-400 hover:text-blue-600 transition-colors"
+            title="Scan Student RFID or QR Code"
+            className="absolute inset-y-0 right-0 pr-3.5 flex items-center text-slate-400 hover:text-blue-600 transition-colors cursor-pointer active:scale-90"
           >
             <QrCode className="w-4 h-4" />
           </button>
@@ -664,6 +671,18 @@ export const StudentsDirectory: React.FC<StudentsDirectoryProps> = ({
           </div>
         </div>
       )}
+
+      {/* Student QR & RFID Tag Scanner Modal */}
+      <StudentQrScannerModal
+        isOpen={showQrModal}
+        onClose={() => setShowQrModal(false)}
+        onStudentIdentified={(student) => {
+          setShowQrModal(false);
+          if (onSelectStudent) {
+            onSelectStudent(student);
+          }
+        }}
+      />
     </div>
   );
 };
