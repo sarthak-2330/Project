@@ -233,7 +233,7 @@ CREATE TABLE IF NOT EXISTS system_settings (
     critical_threshold_percentage NUMERIC NOT NULL DEFAULT 65.0,
     late_counts_as_attended BOOLEAN NOT NULL DEFAULT true,
     allow_student_correction_requests BOOLEAN NOT NULL DEFAULT true,
-    institution_name TEXT NOT NULL DEFAULT 'College Attendance Management System (CAMS)',
+    institution_name TEXT NOT NULL DEFAULT 'Jawahar Education Society''s Institute of Technology, Management & Research, Nashik',
     semester_code TEXT NOT NULL DEFAULT 'Fall 2024',
     biometric_sync_enabled BOOLEAN NOT NULL DEFAULT true,
     updated_at TIMESTAMPTZ DEFAULT NOW()

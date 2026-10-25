@@ -27,7 +27,7 @@ export const INITIAL_SETTINGS: SystemSettings = {
   critical_threshold_percentage: 65.0,
   late_counts_as_attended: true,
   allow_student_correction_requests: true,
-  institution_name: 'St. Xavier Institute of Engineering & Technology',
+  institution_name: "Jawahar Education Society's Institute of Technology, Management & Research, Nashik",
   semester_code: 'Fall 2024 • W9',
   biometric_sync_enabled: true,
 };

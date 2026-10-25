@@ -62,7 +62,7 @@ export const UndertakingFormModal: React.FC<UndertakingFormModalProps> = ({
         <div className="my-4 p-5 rounded-xl border border-slate-200 bg-slate-50/50 space-y-3 font-serif leading-relaxed text-slate-800">
           <div className="text-center border-b border-slate-200 pb-2">
             <h3 className="font-bold uppercase tracking-wider text-xs">
-              St. Xavier Institute of Engineering & Technology
+              Jawahar Education Society's Institute of Technology, Management & Research, Nashik
             </h3>
             <p className="text-[10px] text-slate-500 font-sans">
               Office of the Dean (Academic Affairs) & Department of Computer Science

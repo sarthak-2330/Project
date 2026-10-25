@@ -159,8 +159,8 @@ export const AuthPage: React.FC = () => {
             />
           </div>
 
-          <p className="text-[11px] font-bold tracking-widest uppercase text-blue-200">
-            St. Xavier Institute of Engineering & Technology
+          <p className="text-[11px] font-bold tracking-wider uppercase text-blue-200">
+            Jawahar Education Society's Institute of Technology, Management & Research, Nashik
           </p>
           <h1 className="text-xl sm:text-2xl font-black tracking-tight text-white mt-1">
             CAMS Portal Authentication
@@ -641,7 +641,7 @@ export const AuthPage: React.FC = () => {
 
         {/* Footer */}
         <div className="bg-slate-50 px-6 py-4 border-t border-slate-100 flex items-center justify-between text-[11px] text-slate-500">
-          <span>St. Xavier Institute CAMS v2.4</span>
+          <span>Jawahar Education Society's ITMR, Nashik • CAMS v2.4</span>
           <span className="flex items-center gap-1 font-mono text-emerald-600">
             <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
             Active Session Server

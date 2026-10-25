@@ -301,7 +301,12 @@ class DatabaseService {
   // --- SYSTEM SETTINGS ---
 
   public getSettings(): SystemSettings {
-    return this.getItem<SystemSettings>(STORAGE_KEYS.SETTINGS, INITIAL_SETTINGS);
+    const s = this.getItem<SystemSettings>(STORAGE_KEYS.SETTINGS, INITIAL_SETTINGS);
+    if (!s.institution_name || s.institution_name.includes('Xavier')) {
+      s.institution_name = INITIAL_SETTINGS.institution_name;
+      this.setItem(STORAGE_KEYS.SETTINGS, s);
+    }
+    return s;
   }
 
   public updateSettings(settings: Partial<SystemSettings>): SystemSettings {

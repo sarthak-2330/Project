@@ -20,7 +20,7 @@ export const ExportDailyPdfModal: React.FC<ExportDailyPdfModalProps> = ({ isOpen
   const handleDownload = () => {
     // Generate text/csv digest
     const content = `========================================================\n` +
-      `ST. XAVIER INSTITUTE OF ENGINEERING & TECHNOLOGY\n` +
+      `JAWAHAR EDUCATION SOCIETY'S INSTITUTE OF TECHNOLOGY, MANAGEMENT & RESEARCH, NASHIK\n` +
       `DAILY ATTENDANCE VERIFICATION LEDGER - FALL 2024\n` +
       `Date: Thursday, Oct 24, 2024 | Quorum: 88.4%\n` +
       `========================================================\n\n` +
